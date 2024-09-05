@@ -27,18 +27,23 @@ Make sure your Windows installation has ssh installed: https://learn.microsoft.c
 ## set up your vm
 see https://www.youtube.com/watch?v=OCiN37sjXuw  
 go to https://portal.azure.com/  
-choose a nvidia enabled machine, any NC* will do, e.g. NC12s in Switzerland North  
+Create a resource, Virtual Machine  
+for os pick NVIDIA GPU-Optimized VMI with vGPU driver (Nvidia enabled Ubuntu os) v22.08.0 x64 Gen1  
+choose a nvidia enabled machine, any NC* will do, e.g. NC12s in Switzerland North (i.e. NC12s_v3)    
+Choose Security Type Standard, Azure-selected Zone, Eviction = Stop
 Choose Spot pricing  
 set a username/password or download the ssh key. Don't loose file or u/p  
-for os pick nvidia-gpu-optimized-vmi-a10 (Nvidia enabled Ubuntu os)  
-Copy the IP address to access host via ssh and browser. You'll find the IP under networking as public IP address or in the ressource group in a file called *-ip*  
+Goto Networking Tab & Create Public IP with default settings
+Hit Review & Create  
+Goto newly created Resource, copy the IP address to access host via ssh and browser. You'll find the IP under networking as public IP address or in the ressource group in a file called *-ip*  
+If it displays some error above like * virtual machine agent status is not ready then restart the VM with the button on top... be patient :)  
 
 ## connect
 ssh to your vm with key 
 ```
 ssh -i yourkey.pem username@ip
 ```	
-or password
+or with user/password
 ```
 ssh username@ip
 ```	
@@ -49,8 +54,11 @@ lspci | grep -i NVIDIA
 ```
 
 ## install hw drivers
+The cuda-toolkit installation (last step before reboot) takes about 3-5mins  
 ```
-sudo apt update && sudo apt install -y ubuntu-drivers-common git
+sudo apt update && sudo apt install -y ubuntu-drivers-common git  
+sudo dpkg --configure -a
+sudo apt install -y ubuntu-drivers-common git  
 sudo ubuntu-drivers install
 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
 sudo apt install -y ./cuda-keyring_1.1-1_all.deb
@@ -61,6 +69,7 @@ sudo reboot
 
 ## verify hw support
 ssh back in and verify
+(commands needs verification) not sure if the code below worked
 ```
 curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
   && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
@@ -68,7 +77,8 @@ curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dear
     sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
 ```
 ## install docker-compose
-ubuntu 20.04 only provides docker-compose v1.25.0, we need >= 1.28.0 for hw support in compose so wer work around this:
+(runtime=docker throws "No help topic for ´runtime´ 
+ubuntu 20.04 only provides docker-compose v1.25.0, we need >= 1.28.0 for hw support in compose so we work around this:
 ```
 wget https://github.com/docker/compose/releases/download/1.29.0/docker-compose-Linux-x86_64
 sudo mv docker-compose-Linux-x86_64 /usr/local/bin/docker-compose
