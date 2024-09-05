@@ -18,8 +18,10 @@ Git basics: https://www.youtube.com/watch?v=e9lnsKot_SQ
 Vector databases: https://www.youtube.com/watch?v=t9IDoenf-lo  
 
 # Preparations
-Download putty to your PC
-...
+Download putty to your PC: https://www.heise.de/download/product/putty-7016 (putty.org is or was down)  
+or  
+Make sure your Windows installation has ssh installed: https://learn.microsoft.com/en-us/windows/terminal/tutorials/ssh  
+
 
 # Azure & docker-compose setup for ollama vector embedding lab
 ## set up your vm
@@ -29,6 +31,7 @@ choose a nvidia enabled machine, any NC* will do, e.g. NC12s in Switzerland Nort
 Choose Spot pricing  
 set a username/password or download the ssh key. Don't loose file or u/p  
 for os pick nvidia-gpu-optimized-vmi-a10 (Nvidia enabled Ubuntu os)  
+Copy the IP address to access host via ssh and browser. You'll find the IP under networking as public IP address or in the ressource group in a file called *-ip*  
 
 ## connect
 ssh to your vm with key 
@@ -37,7 +40,7 @@ ssh -i yourkey.pem username@ip
 ```	
 or password
 ```
-ssh -i yourkey.pem username@ip
+ssh username@ip
 ```	
 
 ## verify your vm
