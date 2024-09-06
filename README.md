@@ -17,6 +17,7 @@ What makes LLMs expensive: https://www.youtube.com/watch?v=7gMg98Hf3uM
 Git basics: https://www.youtube.com/watch?v=e9lnsKot_SQ  
 Vector databases: https://www.youtube.com/watch?v=t9IDoenf-lo  
 
+
 # Azure & docker-compose setup for ollama vector embedding lab
 ## set up your vm
 see https://www.youtube.com/watch?v=OCiN37sjXuw  
